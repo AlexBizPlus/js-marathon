@@ -1,5 +1,27 @@
-// Функция из интернета по генерации случайного числа из диапазона
-// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
+const MIN_DAMAGE_REGULAR = 5;
+const MAX_DAMAGE_REGULAR = 15;
+const MIN_DAMAGE_SUPER = 15;
+const MAX_DAMAGE_SUPER = 25;
+
+const $buttonThiderJolt = document.getElementById('btn-kick');
+const $buttonSuperStrike = document.getElementById('btn-kick-super');
+
+const hero = {
+  name: 'Pikachu',
+  health: 100,
+  currentHealth: 100,
+  progressbar: document.getElementById('progressbar-character'),
+  state: document.getElementById('health-character')
+};
+
+const enemy = {
+  name: 'Charmander',
+  health: 100,
+  currentHealth: 100,
+  progressbar: document.getElementById('progressbar-enemy'),
+  state: document.getElementById('health-enemy')
+};
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -7,56 +29,71 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const generatePhoneNumber = () => {
-  let phoneNumber = new Array();
+const stopGame = () => {
+  $buttonThiderJolt.disabled = true;
+  $buttonSuperStrike.disabled = true;
 
-  phoneNumber.push('+');
-  for (let i = 0; i < 15; i++) {
-    phoneNumber.push(getRandomInteger(0, 9));
-  }
-  phoneNumber.splice(2, 1, ' (');
-  phoneNumber.splice(6, 1, ') ');
-  phoneNumber.splice(10, 1, '-');
-  phoneNumber.splice(13, 1, '-');
-
-  return phoneNumber.join('');
-};
-
-const ridSpaces = (string) => {
-  return string.split(' ').join('');
-};
-
-const getRow = (firstString, secondString) => {
-  const newFirstString = ridSpaces(firstString);
-  const newSecondString = ridSpaces(secondString);
-
-  const result = newFirstString.length >= newSecondString.length
-    ? newFirstString.length === newSecondString.length
-      ? 'Lenghts of strings are equals'
-      : `First string is longer than second one: ${newFirstString}`
-    : `Second string is longer than first one: ${newSecondString}`;
-
-  return result;
-};
-
-const chooseTask = () => {
-  const numberTask = prompt('Type 1 or 2:');
-  switch (numberTask) {
-    case '1':
-      const userFirstString = prompt('Type sting 1:');
-      const userSecondString = prompt('Type sting 2:');
-      alert(getRow(userFirstString, userSecondString));
+  switch (true) {
+    case (hero.currentHealth === 0 && enemy.currentHealth === 0):
+      message = `No winner`;
       break;
-
-    case '2':
-      alert('Your fake phone number: ' + generatePhoneNumber());
+    case hero.currentHealth > 0:
+      message = `Winner is ${hero.name}`;
       break;
-
-    default:
-      alert('Press F5 and try again');
+    case enemy.currentHealth > 0:
+      message = `Winner is ${enemy.name}`;
       break;
   }
 
+  renderMessage(message);
+  // alert(message);
+  // console.log(message);
+}
+
+const damageFighter = (person, mimDamage, maxDamage) => {
+  person.currentHealth -= getRandomInteger(mimDamage, maxDamage);
+
+  if (person.currentHealth <= 0) {
+    person.currentHealth = 0;
+  }
 };
 
-chooseTask();
+const renderHealthState = (person) => {
+  person.progressbar.style.width = person.currentHealth / person.health * 100 + '%';
+  person.state.textContent = `${person.currentHealth} / ${person.health}`;
+};
+
+const renderMessage = (message) => {
+  const $header = document.querySelector('header');
+  const $div = document.createElement('div');
+  $div.innerHTML = `<p>${message}</p>`;
+  $header.append($div);
+};
+
+const buttonThiderJoltHandler = () => {
+  damageFighter(hero, MIN_DAMAGE_REGULAR, MAX_DAMAGE_REGULAR);
+  damageFighter(enemy, MIN_DAMAGE_REGULAR, MAX_DAMAGE_REGULAR);
+  renderHealthState(hero);
+  renderHealthState(enemy);
+  if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
+    stopGame();
+  }
+};
+
+const buttonSuperStrikeHandler = () => {
+  damageFighter(enemy, MIN_DAMAGE_SUPER, MAX_DAMAGE_SUPER);
+  renderHealthState(enemy);
+
+  if (enemy.currentHealth === 0) {
+    stopGame();
+  }
+
+  $buttonSuperStrike.disabled = true;
+};
+
+const startGame = () => {
+  $buttonThiderJolt.addEventListener('click', buttonThiderJoltHandler);
+  $buttonSuperStrike.addEventListener('click', buttonSuperStrikeHandler);
+};
+
+startGame();

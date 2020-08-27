@@ -55,20 +55,30 @@ const getRandomElement = (someArray) => {
 let logList = new Array();
 
 const createLogMessage = (firstChar, secondChar, damage) => {
+  const {
+    name,
+    currentHealth,
+    health
+  } = firstChar;
+
+  const {
+    name: otherName
+  } = secondChar;
+
   const logs = [
-    `${firstChar.name} вспомнил что-то важное, но неожиданно ${secondChar.name}, не помня себя от испуга, ударил в предплечье врага.`,
-    `${firstChar.name} поперхнулся, и за это ${secondChar.name} с испугу приложил прямой удар коленом в лоб врага.`,
-    `${firstChar.name} забылся, но в это время наглый ${secondChar.name}, приняв волевое решение, неслышно подойдя сзади, ударил.`,
-    `${firstChar.name} пришел в себя, но неожиданно ${secondChar.name} случайно нанес мощнейший удар.`,
-    `${firstChar.name} поперхнулся, но в это время ${secondChar.name} нехотя раздробил кулаком \<вырезанно цензурой\> противника.`,
-    `${firstChar.name} удивился, а ${secondChar.name} пошатнувшись влепил подлый удар.`,
-    `${firstChar.name} высморкался, но неожиданно ${secondChar.name} провел дробящий удар.`,
-    `${firstChar.name} пошатнулся, и внезапно наглый ${secondChar.name} беспричинно ударил в ногу противника`,
-    `${firstChar.name} расстроился, как вдруг, неожиданно ${secondChar.name} случайно влепил стопой в живот соперника.`,
-    `${firstChar.name} пытался что-то сказать, но вдруг, неожиданно ${secondChar.name} со скуки, разбил бровь сопернику.`
+    `${name} вспомнил что-то важное, но неожиданно ${otherName}, не помня себя от испуга, ударил в предплечье врага.`,
+    `${name} поперхнулся, и за это ${otherName} с испугу приложил прямой удар коленом в лоб врага.`,
+    `${name} забылся, но в это время наглый ${otherName}, приняв волевое решение, неслышно подойдя сзади, ударил.`,
+    `${name} пришел в себя, но неожиданно ${otherName} случайно нанес мощнейший удар.`,
+    `${name} поперхнулся, но в это время ${otherName} нехотя раздробил кулаком \<вырезанно цензурой\> противника.`,
+    `${name} удивился, а ${otherName} пошатнувшись влепил подлый удар.`,
+    `${name} высморкался, но неожиданно ${otherName} провел дробящий удар.`,
+    `${name} пошатнулся, и внезапно наглый ${otherName} беспричинно ударил в ногу противника`,
+    `${name} расстроился, как вдруг, неожиданно ${otherName} случайно влепил стопой в живот соперника.`,
+    `${name} пытался что-то сказать, но вдруг, неожиданно ${otherName} со скуки, разбил бровь сопернику.`
   ];
 
-  logList.push(`${getRandomElement(logs)} -${damage} [${firstChar.currentHealth}/${firstChar.health}]`);
+  logList.push(`${getRandomElement(logs)} -${damage} [${currentHealth}/${health}]`);
   return;
 };
 

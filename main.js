@@ -1,4 +1,4 @@
-// ------------------ const.js ----------------------------
+// ------------------ const.js -----------------------------
 const MIN_DAMAGE_REGULAR = 5;
 const MAX_DAMAGE_REGULAR = 15;
 const MIN_DAMAGE_SUPER = 15;

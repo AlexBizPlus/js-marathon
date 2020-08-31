@@ -32,8 +32,16 @@ const enemy = {
   renderHealthState: renderHealthState
 };
 
+const decreaseClicks = function () {
+  let clicks = MAX_CLICK_PER_BUTTON;
+
+  return function (n = 1) {
+    clicks -= n;
+    return clicks;
+  }
+}
+
 const clicks = {
-  maxClicks: MAX_CLICK_PER_BUTTON,
   total: {
     clickCount: 0,
   },
@@ -43,6 +51,7 @@ const createButtons = (name) => {
   const elem = Object.create(clicks);
   elem.count = 0;
   elem.name = name;
+  elem.decreaseClicks = decreaseClicks();
   return elem;
 };
 
@@ -122,10 +131,10 @@ const renderContainer = () => {
 
   $playground.after(logContainer);
   renderLogContainer(caption, MAX_LOG_ELEMENTS);
-  renderLogContainer(clickCaption, BUTTONS_COUNT + 2);
+  renderLogContainer(clickCaption, 1);
   logContainer.children[logContainer.children.length - 1].style.marginRight = '0';
   prepareLog();
-  prepareClickLog();
+  renderTotalClicks();
 };
 
 const prepareLog = () => {
@@ -134,41 +143,18 @@ const prepareLog = () => {
   logText.id = 'log-caption-text';
 };
 
-const prepareClickLog = () => {
-  const logContainer = document.querySelector('#log-container').children[1];
-
-  const logText = logContainer.querySelector('ul').children[0];
-  logText.innerText = `
-  Max ${MAX_CLICK_PER_BUTTON} clicks on one button!`;
-
-  const logButtonOne = logContainer.querySelector('ul').children[1];
-  logButtonOne.innerText = `
-  ${clickThiderJolt.name}:  `;
-  logButtonOne.id = clickThiderJolt.name;
-
-  const logButtonTwo = logContainer.querySelector('ul').children[2];
-  logButtonTwo.innerText = `
-  ${clickSuperStrike.name}:  `;
-  logButtonTwo.id = clickSuperStrike.name;
-
-  const logButtonThree = logContainer.querySelector('ul').children[3];
-  logButtonThree.innerText = `
-  ${clickRandom.name}:  `;
-  logButtonThree.id = clickRandom.name;
-
-  renderTotalClicks();
+const renderButtonClicks = (button, total = MAX_CLICK_PER_BUTTON) => {
+  let buttonText = button.innerText;
+  buttonText = buttonText.split('[').map((el, i) => (
+    (i === 1) ?
+    el = `[${total}]` : el = el
+  )).join('');
+  button.innerText = buttonText;
 };
-
-const renderButtonClicks = (id, total) => {
-  const logContainer = document.querySelector('#log-container').children[1];
-  const logButton = logContainer.querySelector(`#${id}`);
-  logButton.innerText = `
-  ${id}: ${total}`;
-}
 
 const renderTotalClicks = (total = 0) => {
   const logContainer = document.querySelector('#log-container').children[1];
-  const logTotal = logContainer.querySelector('ul').children[BUTTONS_COUNT + 1];
+  const logTotal = logContainer.querySelector('ul').children[0];
   logTotal.innerText = `
   Total clicks: ${total}`;
 };
@@ -262,15 +248,16 @@ const buttonThiderJoltHandler = () => {
   hero.renderHealthState();
   enemy.renderHealthState();
 
-  clickThiderJolt.count++;
   clickThiderJolt.total.clickCount++;
 
-  clickThiderJolt.count >= clickThiderJolt.maxClicks ?
+  const countLeft = clickThiderJolt.decreaseClicks();
+
+  renderButtonClicks($buttonThiderJolt, countLeft);
+  renderTotalClicks(clickThiderJolt.total.clickCount);
+
+  countLeft === 0 ?
     $buttonThiderJolt.disabled = true :
     null;
-
-  renderButtonClicks(clickThiderJolt.name, clickThiderJolt.count);
-  renderTotalClicks(clickThiderJolt.total.clickCount);
 
   if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
     stopGame();
@@ -281,17 +268,20 @@ const buttonSuperStrikeHandler = () => {
   enemy.damageFighter(MIN_DAMAGE_SUPER, MAX_DAMAGE_SUPER);
   enemy.renderHealthState();
 
-  clickSuperStrike.count++;
   clickSuperStrike.total.clickCount++;
 
-  renderButtonClicks(clickSuperStrike.name, clickSuperStrike.count);
+  const countLeft = clickSuperStrike.decreaseClicks(MAX_CLICK_PER_BUTTON);
+
+  renderButtonClicks($buttonSuperStrike, countLeft);
   renderTotalClicks(clickSuperStrike.total.clickCount);
+
+  countLeft === 0 ?
+    $buttonSuperStrike.disabled = true :
+    null;
 
   if (enemy.currentHealth === 0) {
     stopGame();
   }
-
-  $buttonSuperStrike.disabled = true;
 };
 
 const buttonRandomHandler = () => {
@@ -302,15 +292,16 @@ const buttonRandomHandler = () => {
   hero.renderHealthState();
   enemy.renderHealthState();
 
-  clickRandom.count++;
   clickRandom.total.clickCount++;
 
-  clickRandom.count >= clickRandom.maxClicks ?
+  const countLeft = clickRandom.decreaseClicks();
+
+  renderButtonClicks($buttonRandom, countLeft);
+  renderTotalClicks(clickRandom.total.clickCount);
+
+  countLeft === 0 ?
     $buttonRandom.disabled = true :
     null;
-
-  renderButtonClicks(clickRandom.name, clickRandom.count);
-  renderTotalClicks(clickRandom.total.clickCount);
 
   if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
     stopGame();
@@ -318,6 +309,10 @@ const buttonRandomHandler = () => {
 };
 
 const startGame = () => {
+  renderButtonClicks($buttonThiderJolt);
+  renderButtonClicks($buttonSuperStrike, 1);
+  renderButtonClicks($buttonRandom);
+
   $buttonThiderJolt.addEventListener('click', buttonThiderJoltHandler);
   $buttonSuperStrike.addEventListener('click', buttonSuperStrikeHandler);
   $buttonRandom.addEventListener('click', buttonRandomHandler);

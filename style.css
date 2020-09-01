@@ -51,8 +51,8 @@ body {
   max-width: 1024px;
   display: flex;
   justify-content: space-around;
-  margin: 20px auto;
-  margin-bottom: 0;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .arrow {
@@ -538,7 +538,7 @@ h1 {
 .log-background {
   position: relative;
   width: 100%;
-  height: 260px;
+  height: 200px;
   overflow: hidden;
 }
 
@@ -556,7 +556,7 @@ h1 {
 .log-background p {
   position: absolute;
   width: 100%;
-  height: 260px;
+  height: 200px;
   overflow: hidden;
   top: 0;
   left: 50%;

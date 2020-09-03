@@ -1,11 +1,13 @@
 import {
   MAX_LOG_ELEMENTS,
   MAX_CLICK_PER_BUTTON,
-  $playground
-} from "./const.js";
-import {
+  $playground,
+  $container,
   log
 } from "./const.js";
+import {
+  startGame
+} from "./main.js";
 
 const caption = 'Fight log:';
 const clickCaption = 'Click log:';
@@ -91,3 +93,53 @@ export const renderMessage = (message) => {
   $logCaption.style.backgroundColor = '#000000';
   $logCaption.style.color = '#ffffff';
 };
+
+export const renderHeaderMessage = () => {
+  const textContainer = document.createElement('div');
+  textContainer.style.minWidth = '200px';
+  textContainer.style.maxWidth = '400px';
+  textContainer.style.position = 'absolute';
+  textContainer.style.top = '0';
+  textContainer.style.left = '50%';
+  textContainer.style.transform = 'translate(-50%, 0)';
+  textContainer.style.fontFamily = '"Permanent Marker" , cursive';
+  textContainer.style.fontStyle = 'italic';
+  textContainer.style.fontSize = '25px';
+
+  const textCaption = document.createElement('p');
+  textCaption.style.margin = 'auto';
+  textCaption.id = 'header-message';
+
+  textContainer.append(textCaption);
+  $playground.append(textContainer);
+};
+
+export const renderStartButton = () => {
+  $container.innerText = '';
+  $container.style.alignContent = 'center';
+  const $button = document.createElement('button');
+  $button.classList.add('button');
+  $button.innerText = `New Game`;
+  $button.addEventListener('click', () => {
+    startGame();
+  });
+  $container.append($button);
+};
+
+export const renderPlayerTwo = (player) => {
+  const $img = document.querySelector(`#img-player2`);
+  $img.src = player.img;
+  const $name = document.querySelector(`#name-player2`);
+  $name.innerText = `${player.name}`;
+  const $health = document.querySelector(`#health-player2`);
+  $health.innerText = `${player.hp} / ${player.hp}`;
+  const $progressbar = document.querySelector(`#progressbar-player2`);
+  $progressbar.style.width = '100%';
+}
+
+export const renderPlayerOne = (player) => {
+  const $health = document.querySelector(`#health-player1`);
+  $health.innerText = `${player.hp} / ${player.hp}`;
+  const $progressbar = document.querySelector(`#progressbar-player1`);
+  $progressbar.style.width = '100%';
+}

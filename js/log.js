@@ -1,7 +1,6 @@
 import {
   log
 } from "./const.js";
-
 import {
   getRandomElement
 } from "./utils.js";

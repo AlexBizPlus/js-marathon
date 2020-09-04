@@ -10,7 +10,7 @@ import {
 } from "./main.js";
 
 const caption = 'Fight log:';
-const clickCaption = 'Click log:';
+const clickCaption = 'Kill board:';
 
 export const renderContainer = () => {
   const logContainer = document.createElement('div');
@@ -28,7 +28,7 @@ export const renderContainer = () => {
   renderLogContainer(clickCaption, 1);
   logContainer.children[logContainer.children.length - 1].style.marginRight = '0';
   prepareLog();
-  renderTotalClicks();
+  renderTotalKillS();
 };
 
 const prepareLog = () => {
@@ -46,11 +46,11 @@ export const renderButtonClicks = (button, total = MAX_CLICK_PER_BUTTON) => {
   button.innerText = buttonText;
 };
 
-export const renderTotalClicks = (total = 0) => {
+export const renderTotalKillS = (total = 0) => {
   const logContainer = document.querySelector('#log-container').children[1];
   const logTotal = logContainer.querySelector('ul').children[0];
   logTotal.innerText = `
-  Total clicks: ${total}`;
+  Total kills: ${total}`;
 };
 
 export const renderLogContainer = (text, index) => {

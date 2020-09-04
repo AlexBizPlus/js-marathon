@@ -1,15 +1,9 @@
 import {
-  MAX_CLICK_PER_BUTTON,
   HEADER_MESSAGES,
+  MAX_LOG_ELEMENTS,
   DELAY,
-  log
+  log,
 } from "./const.js";
-import {
-  pokemons
-} from "./pokemons.js";
-import {
-  hero
-} from "./main.js";
 
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -74,4 +68,13 @@ export const getPlayerTwo = (name, someArray) => {
 export const showHeaderMessage = (text) => {
   const $textCaption = document.querySelector('#header-message');
   $textCaption.innerText = `${text}`;
-}
+};
+
+export const clearLog = () => {
+  log.logList = [''];
+  const $log = document.querySelector('.log-background ul');
+
+  for (let i = 0; i < MAX_LOG_ELEMENTS; i++) {
+    $log.children[i].innerText = '';
+  }
+};

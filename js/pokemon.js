@@ -33,6 +33,7 @@ class Pokemon extends Selectors {
     this.currentHealth = props.hp;
     this.type = props.type;
     this.attacks = props.attacks;
+    this.kills = props.kills;
   };
 
   renderHealthState() {
@@ -48,6 +49,7 @@ class Pokemon extends Selectors {
     this.currentHealth -= damage;
 
     if (this.currentHealth < 0) {
+      hero.kills.kills.total++;
       this.currentHealth = 0;
     }
 
@@ -58,10 +60,10 @@ class Pokemon extends Selectors {
     renderLogMessage();
 
     this.renderHealthState();
-    decreaseClicks
 
     if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
       stopGame();
+      return;
     }
   };
 

@@ -16,7 +16,7 @@ export const $container = document.querySelector('.control');
 
 export const log = {
   logList: new Array(),
-  total: {
-    clickCount: 0,
-  },
+  kills: {
+    total: 0,
+  }
 };

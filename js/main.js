@@ -1,6 +1,7 @@
 import {
   DELAY,
   $container,
+  log
 } from "./const.js";
 import {
   getRandomElement,
@@ -8,6 +9,7 @@ import {
   getPlayerOne,
   showHeaderMessage,
   getPlayerTwo,
+  clearLog,
 }
 from "./utils.js";
 import {
@@ -15,7 +17,8 @@ import {
   renderHeaderMessage,
   renderStartButton,
   renderPlayerTwo,
-  renderPlayerOne
+  renderPlayerOne,
+  renderTotalKillS
 } from "./render.js";
 import Pokemon from "./pokemon.js";
 import {
@@ -28,6 +31,7 @@ const reloadPlayerOne = () => {
   return new Pokemon({
     ...pikachu,
     selector: 'player1',
+    kills: Object.create(log)
   });
 };
 
@@ -38,6 +42,7 @@ const getEnemy = () => {
   return new Pokemon({
     ...randomChar,
     selector: 'player2',
+    kills: Object.create(log)
   });
 };
 
@@ -54,11 +59,15 @@ export const startGame = () => {
   $container.innerText = '';
   showTimer();
   let lastTimeout;
-  let message;
+  clearTimeout(lastTimeout);
   lastTimeout = window.setTimeout(function () {
     hero = reloadPlayerOne();
     enemy = getEnemy();
     hero.getButtons();
+    clearLog();
+    renderTotalKillS(hero.kills.kills.total);
+    clearTimeout(lastTimeout);
+    return;
   }, DELAY * 3);
 };
 
@@ -68,6 +77,7 @@ export const stopGame = () => {
     case ((hero.currentHealth === 0) && (enemy.currentHealth === 0)):
       message = `No winner`;
       renderStartButton();
+      log.kills.total = 0;
       break;
     case hero.currentHealth > 0:
       message = `Winner is ${hero.name}`;
@@ -76,9 +86,11 @@ export const stopGame = () => {
     case enemy.currentHealth > 0:
       message = `Winner is ${enemy.name}`;
       renderStartButton();
+      log.kills.total = 0;
       break;
   }
   showHeaderMessage(message);
+  return;
 };
 
 initGame();

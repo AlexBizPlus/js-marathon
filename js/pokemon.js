@@ -39,6 +39,12 @@ class Pokemon extends Selectors {
   renderHealthState() {
     this.progressbar.style.width = `${this.currentHealth / this.health * 100}%`;
     this.state.textContent = `${this.currentHealth} / ${this.health}`;
+
+    (this.currentHealth / this.health) < 0.2 ?
+      this.progressbar.classList.add('critical') :
+      (this.currentHealth / this.health) < 0.6 ?
+      this.progressbar.classList.add('low') :
+      null;
   };
 
   damageFighter(minDamage = 0, maxDamage = 0) {
@@ -60,11 +66,6 @@ class Pokemon extends Selectors {
     renderLogMessage();
 
     this.renderHealthState();
-
-    // if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
-    //   stopGame();
-    //   return;
-    // }
   };
 
   renderButton(name, maxCount, minDamage, maxDamage) {

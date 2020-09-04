@@ -10,6 +10,7 @@ import {
   showHeaderMessage,
   getPlayerTwo,
   clearLog,
+  resetColorProgressBar,
 }
 from "./utils.js";
 import {
@@ -53,6 +54,7 @@ const initGame = () => {
   renderContainer();
   renderHeaderMessage();
   renderStartButton();
+  resetColorProgressBar();
 };
 
 export const startGame = () => {
@@ -90,6 +92,7 @@ export const stopGame = () => {
       break;
   }
   showHeaderMessage(message);
+  resetColorProgressBar();
   return;
 };
 

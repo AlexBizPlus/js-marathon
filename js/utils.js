@@ -78,3 +78,15 @@ export const clearLog = () => {
     $log.children[i].innerText = '';
   }
 };
+
+export const resetColorProgressBar = () => {
+  const $progressBars = document.querySelectorAll('.health');
+  Array.from($progressBars).forEach(item => {
+    item.classList.contains('critical') ?
+      item.classList.remove('critical') :
+      null;
+    item.classList.contains('low') ?
+      item.classList.remove('low') :
+      null;
+  });
+}

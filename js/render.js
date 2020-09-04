@@ -1,6 +1,5 @@
 import {
   MAX_LOG_ELEMENTS,
-  MAX_CLICK_PER_BUTTON,
   $playground,
   $container,
   log
@@ -37,7 +36,7 @@ const prepareLog = () => {
   logText.id = 'log-caption-text';
 };
 
-export const renderButtonClicks = (button, total = MAX_CLICK_PER_BUTTON) => {
+export const renderButtonClicks = (button, total) => {
   let buttonText = button.innerText;
   buttonText = buttonText.split('[').map((el, i) => (
     (i === 1) ?

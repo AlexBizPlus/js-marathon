@@ -10,5 +10,6 @@ export const log = {
   logList: new Array(),
   kills: {
     total: 0,
+    lastVictim: '',
   }
 };

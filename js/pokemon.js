@@ -55,6 +55,7 @@ class Pokemon extends Selectors {
     this.currentHealth -= damage;
 
     if (this.currentHealth < 0) {
+      hero.kills.kills.lastVictim = enemy.name;
       hero.kills.kills.total++;
       this.currentHealth = 0;
     }

@@ -67,7 +67,7 @@ export const startGame = () => {
     enemy = getEnemy();
     hero.getButtons();
     clearLog();
-    renderTotalKillS(hero.kills.kills.total);
+    renderTotalKillS(hero.kills.kills.total, hero.kills.kills.lastVictim);
     clearTimeout(lastTimeout);
     return;
   }, DELAY * 3);

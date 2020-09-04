@@ -24,7 +24,7 @@ export const renderContainer = () => {
 
   $playground.after(logContainer);
   renderLogContainer(caption, MAX_LOG_ELEMENTS);
-  renderLogContainer(clickCaption, 1);
+  renderLogContainer(clickCaption, 2);
   logContainer.children[logContainer.children.length - 1].style.marginRight = '0';
   prepareLog();
   renderTotalKillS();
@@ -45,9 +45,12 @@ export const renderButtonClicks = (button, total) => {
   button.innerText = buttonText;
 };
 
-export const renderTotalKillS = (total = 0) => {
+export const renderTotalKillS = (total = 0, name = '') => {
   const logContainer = document.querySelector('#log-container').children[1];
-  const logTotal = logContainer.querySelector('ul').children[0];
+  const logStore = logContainer.querySelector('ul').children[0];
+  logStore.innerText = `
+  You recently killed: ${name}`;
+  const logTotal = logContainer.querySelector('ul').children[1];
   logTotal.innerText = `
   Total kills: ${total}`;
 };

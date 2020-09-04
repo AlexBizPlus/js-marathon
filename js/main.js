@@ -3,19 +3,15 @@ import {
   $container,
 } from "./const.js";
 import {
-  getRandomInteger,
   getRandomElement,
-  decreaseClicks,
   showTimer,
   getPlayerOne,
   showHeaderMessage,
+  getPlayerTwo,
 }
 from "./utils.js";
 import {
   renderContainer,
-  renderButtonClicks,
-  renderTotalClicks,
-  renderMessage,
   renderHeaderMessage,
   renderStartButton,
   renderPlayerTwo,
@@ -36,13 +32,15 @@ const reloadPlayerOne = () => {
 };
 
 const getEnemy = () => {
-  const char = getPlayerOne(getRandomElement(pokemons).name, pokemons);
-  renderPlayerTwo(char);
+  const pokemonsWithoutPukachu = getPlayerTwo('Pikachu', pokemons);
+  const randomChar = getRandomElement(pokemonsWithoutPukachu);
+  renderPlayerTwo(randomChar);
   return new Pokemon({
-    ...char,
+    ...randomChar,
     selector: 'player2',
   });
-}
+};
+
 export let hero;
 export let enemy;
 
@@ -56,6 +54,7 @@ export const startGame = () => {
   $container.innerText = '';
   showTimer();
   let lastTimeout;
+  let message;
   lastTimeout = window.setTimeout(function () {
     hero = reloadPlayerOne();
     enemy = getEnemy();

@@ -87,13 +87,6 @@ export const renderLogMessage = () => {
   }
 };
 
-export const renderMessage = (message) => {
-  const $logCaption = document.querySelector('#log-caption-text');
-  $logCaption.innerText = `${message}`;
-  $logCaption.style.backgroundColor = '#000000';
-  $logCaption.style.color = '#ffffff';
-};
-
 export const renderHeaderMessage = () => {
   const textContainer = document.createElement('div');
   textContainer.style.minWidth = '200px';
@@ -128,7 +121,7 @@ export const renderStartButton = () => {
 
 export const renderPlayerTwo = (player) => {
   const $img = document.querySelector(`#img-player2`);
-  $img.src = player.img;
+  $img.src = `${player.img}`;
   const $name = document.querySelector(`#name-player2`);
   $name.innerText = `${player.name}`;
   const $health = document.querySelector(`#health-player2`);

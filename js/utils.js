@@ -44,7 +44,6 @@ export const showTimer = () => {
     if (i === HEADER_MESSAGES.length) {
       clearTimeout(intervalCount);
       $textCaption.innerText = ``;
-      hero.getButtons();
       return;
     }
     $textCaption.innerText = `${HEADER_MESSAGES[i]}`;
@@ -68,9 +67,11 @@ export const getPlayerOne = (name, someArray) => {
   return someArray.find(item => item.name === name)
 };
 
+export const getPlayerTwo = (name, someArray) => {
+  return someArray.filter(item => item.name !== name)
+};
+
 export const showHeaderMessage = (text) => {
   const $textCaption = document.querySelector('#header-message');
   $textCaption.innerText = `${text}`;
 }
-
-// pokemonsWithoutPikachu

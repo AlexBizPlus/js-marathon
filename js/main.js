@@ -74,17 +74,17 @@ export const startGame = () => {
 export const stopGame = () => {
   let message;
   switch (true) {
-    case ((hero.currentHealth === 0) && (enemy.currentHealth === 0)):
-      message = `No winner`;
-      renderStartButton();
-      log.kills.total = 0;
-      break;
     case hero.currentHealth > 0:
       message = `Winner is ${hero.name}`;
       startGame();
       break;
     case enemy.currentHealth > 0:
       message = `Winner is ${enemy.name}`;
+      renderStartButton();
+      log.kills.total = 0;
+      break;
+    case ((hero.currentHealth === 0) && (enemy.currentHealth === 0)):
+      message = `No winner`;
       renderStartButton();
       log.kills.total = 0;
       break;

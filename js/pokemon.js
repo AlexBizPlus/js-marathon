@@ -61,10 +61,10 @@ class Pokemon extends Selectors {
 
     this.renderHealthState();
 
-    if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
-      stopGame();
-      return;
-    }
+    // if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
+    //   stopGame();
+    //   return;
+    // }
   };
 
   renderButton(name, maxCount, minDamage, maxDamage) {
@@ -83,6 +83,11 @@ class Pokemon extends Selectors {
         $button.disabled = true :
         null;
       hero.damageFighter();
+
+      if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
+        stopGame();
+        return;
+      }
     });
     $container.append($button);
   }

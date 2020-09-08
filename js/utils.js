@@ -3,6 +3,7 @@ import {
   MAX_LOG_ELEMENTS,
   DELAY,
   log,
+  $container
 } from "./const.js";
 
 export const getRandomInteger = (a = 0, b = 1) => {
@@ -89,4 +90,9 @@ export const resetColorProgressBar = () => {
       item.classList.remove('low') :
       null;
   });
-}
+};
+
+export const resetButtonContainer = () => {
+  const buttons = $container.querySelectorAll('button');
+  buttons.forEach(item => item.remove());
+};

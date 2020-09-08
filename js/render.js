@@ -121,20 +121,13 @@ export const renderStartButton = () => {
   $container.append($button);
 };
 
-export const renderPlayerTwo = (player) => {
-  const $img = document.querySelector(`#img-player2`);
+export const renderPlayer = (selector, player) => {
+  const $img = document.querySelector(`#img-${selector}`);
   $img.src = `${player.img}`;
-  const $name = document.querySelector(`#name-player2`);
+  const $name = document.querySelector(`#name-${selector}`);
   $name.innerText = `${player.name}`;
-  const $health = document.querySelector(`#health-player2`);
+  const $health = document.querySelector(`#health-${selector}`);
   $health.innerText = `${player.hp} / ${player.hp}`;
-  const $progressbar = document.querySelector(`#progressbar-player2`);
-  $progressbar.style.width = '100%';
-}
-
-export const renderPlayerOne = (player) => {
-  const $health = document.querySelector(`#health-player1`);
-  $health.innerText = `${player.hp} / ${player.hp}`;
-  const $progressbar = document.querySelector(`#progressbar-player1`);
+  const $progressbar = document.querySelector(`#progressbar-${selector}`);
   $progressbar.style.width = '100%';
 }

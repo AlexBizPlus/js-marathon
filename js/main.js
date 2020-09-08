@@ -11,24 +11,28 @@ import {
   getPlayerTwo,
   clearLog,
   resetColorProgressBar,
+  resetButtonContainer
 }
 from "./utils.js";
 import {
   renderContainer,
   renderHeaderMessage,
   renderStartButton,
-  renderPlayerTwo,
-  renderPlayerOne,
+  renderPlayer,
   renderTotalKillS
 } from "./render.js";
 import Pokemon from "./pokemon.js";
 import {
-  pokemons
-} from "./pokemons.js";
+  getPokemons
+} from "./backend.js";
+
+let pokemons;
+export let hero;
+export let enemy;
 
 const reloadPlayerOne = () => {
   const pikachu = getPlayerOne('Pikachu', pokemons);
-  renderPlayerOne(pikachu);
+  renderPlayer('player1', pikachu);
   return new Pokemon({
     ...pikachu,
     selector: 'player1',
@@ -39,7 +43,7 @@ const reloadPlayerOne = () => {
 const getEnemy = () => {
   const pokemonsWithoutPukachu = getPlayerTwo('Pikachu', pokemons);
   const randomChar = getRandomElement(pokemonsWithoutPukachu);
-  renderPlayerTwo(randomChar);
+  renderPlayer('player2', randomChar);
   return new Pokemon({
     ...randomChar,
     selector: 'player2',
@@ -47,10 +51,9 @@ const getEnemy = () => {
   });
 };
 
-export let hero;
-export let enemy;
 
-const initGame = () => {
+const initGame = async () => {
+  pokemons = await getPokemons();
   renderContainer();
   renderHeaderMessage();
   renderStartButton();
@@ -58,7 +61,8 @@ const initGame = () => {
 };
 
 export const startGame = () => {
-  $container.innerText = '';
+
+  resetButtonContainer();
   showTimer();
   let lastTimeout;
   clearTimeout(lastTimeout);

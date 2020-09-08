@@ -1,152 +1,99 @@
 import {
-  MIN_DAMAGE_REGULAR,
-  MAX_DAMAGE_REGULAR,
-  MIN_DAMAGE_SUPER,
-  MAX_DAMAGE_SUPER,
-  MAX_CLICK_PER_BUTTON,
-  $buttonThiderJolt,
-  $buttonSuperStrike,
-  $buttonRandom,
+  DELAY,
+  $container,
   log
 } from "./const.js";
 import {
-  getRandomInteger,
-  decreaseClicks
+  getRandomElement,
+  showTimer,
+  getPlayerOne,
+  showHeaderMessage,
+  getPlayerTwo,
+  clearLog,
+  resetColorProgressBar,
 }
 from "./utils.js";
 import {
   renderContainer,
-  renderButtonClicks,
-  renderTotalClicks,
-  renderMessage
+  renderHeaderMessage,
+  renderStartButton,
+  renderPlayerTwo,
+  renderPlayerOne,
+  renderTotalKillS
 } from "./render.js";
 import Pokemon from "./pokemon.js";
+import {
+  pokemons
+} from "./pokemons.js";
 
-export const hero = new Pokemon({
-  name: 'Pikachu',
-  health: 100,
-  currentHealth: 100,
-  selector: 'character',
-});
-
-export const enemy = new Pokemon({
-  name: 'Charmander',
-  health: 100,
-  currentHealth: 100,
-  selector: 'enemy',
-});
-
-const createButtons = (name) => {
-  const elem = Object.create(log);
-  elem.count = 0;
-  elem.name = name;
-  elem.decreaseClicks = decreaseClicks();
-  return elem;
+const reloadPlayerOne = () => {
+  const pikachu = getPlayerOne('Pikachu', pokemons);
+  renderPlayerOne(pikachu);
+  return new Pokemon({
+    ...pikachu,
+    selector: 'player1',
+    kills: Object.create(log)
+  });
 };
 
-const buttonThiderJolt = createButtons('ThiderJolt');
-const buttonSuperStrike = createButtons('SuperStrike');
-const buttonRandom = createButtons('Random');
+const getEnemy = () => {
+  const pokemonsWithoutPukachu = getPlayerTwo('Pikachu', pokemons);
+  const randomChar = getRandomElement(pokemonsWithoutPukachu);
+  renderPlayerTwo(randomChar);
+  return new Pokemon({
+    ...randomChar,
+    selector: 'player2',
+    kills: Object.create(log)
+  });
+};
 
-const {
-  name: nameHero,
-} = hero;
+export let hero;
+export let enemy;
 
-const {
-  name: nameEmemy,
-} = enemy;
-
-const startGame = () => {
-  renderButtonClicks($buttonThiderJolt);
-  renderButtonClicks($buttonSuperStrike, 1);
-  renderButtonClicks($buttonRandom);
-
-  $buttonThiderJolt.addEventListener('click', buttonThiderJoltHandler);
-  $buttonSuperStrike.addEventListener('click', buttonSuperStrikeHandler);
-  $buttonRandom.addEventListener('click', buttonRandomHandler);
-
+const initGame = () => {
   renderContainer();
+  renderHeaderMessage();
+  renderStartButton();
+  resetColorProgressBar();
 };
 
-const stopGame = () => {
-  $buttonThiderJolt.disabled = true;
-  $buttonSuperStrike.disabled = true;
-  $buttonRandom.disabled = true;
-  let message;
+export const startGame = () => {
+  $container.innerText = '';
+  showTimer();
+  let lastTimeout;
+  clearTimeout(lastTimeout);
+  lastTimeout = window.setTimeout(function () {
+    hero = reloadPlayerOne();
+    enemy = getEnemy();
+    hero.getButtons();
+    clearLog();
+    renderTotalKillS(hero.kills.kills.total, hero.kills.kills.lastVictim);
+    clearTimeout(lastTimeout);
+    return;
+  }, DELAY * 3);
+};
 
+export const stopGame = () => {
+  let message;
   switch (true) {
-    case ((hero.currentHealth === 0) && (enemy.currentHealth === 0)):
-      message = `No winner`;
-      break;
     case hero.currentHealth > 0:
-      message = `Winner is ${nameHero}`;
+      message = `Winner is ${hero.name}`;
+      startGame();
       break;
     case enemy.currentHealth > 0:
-      message = `Winner is ${nameEmemy}`;
+      message = `Winner is ${enemy.name}`;
+      renderStartButton();
+      log.kills.total = 0;
+      break;
+    case ((hero.currentHealth === 0) && (enemy.currentHealth === 0)):
+      message = `No winner`;
+      renderStartButton();
+      log.kills.total = 0;
       break;
   }
-
-  renderMessage(message);
+  showHeaderMessage(message);
+  resetColorProgressBar();
+  return;
 };
 
-const buttonThiderJoltHandler = () => {
-  hero.damageFighter(MIN_DAMAGE_REGULAR, MAX_DAMAGE_REGULAR);
-  enemy.damageFighter(MIN_DAMAGE_REGULAR, MAX_DAMAGE_REGULAR);
-
-  buttonThiderJolt.total.clickCount++;
-
-  const countLeft = buttonThiderJolt.decreaseClicks();
-  renderButtonClicks($buttonThiderJolt, countLeft);
-
-  renderTotalClicks(buttonThiderJolt.total.clickCount);
-
-  countLeft === 0 ?
-    $buttonThiderJolt.disabled = true :
-    null;
-
-  if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
-    stopGame();
-  }
-};
-
-const buttonSuperStrikeHandler = () => {
-  enemy.damageFighter(MIN_DAMAGE_SUPER, MAX_DAMAGE_SUPER);
-
-  buttonSuperStrike.total.clickCount++;
-
-  const countLeft = buttonSuperStrike.decreaseClicks(MAX_CLICK_PER_BUTTON);
-
-  renderButtonClicks($buttonSuperStrike, countLeft);
-  renderTotalClicks(buttonSuperStrike.total.clickCount);
-
-  countLeft === 0 ?
-    $buttonSuperStrike.disabled = true :
-    null;
-
-  if (enemy.currentHealth === 0) {
-    stopGame();
-  }
-};
-
-const buttonRandomHandler = () => {
-  const randomChar = getRandomInteger() ?
-    hero.damageFighter(MIN_DAMAGE_SUPER, MAX_DAMAGE_SUPER) :
-    enemy.damageFighter(MIN_DAMAGE_SUPER, MAX_DAMAGE_SUPER);
-
-  buttonRandom.total.clickCount++;
-
-  const countLeft = buttonRandom.decreaseClicks();
-
-  renderButtonClicks($buttonRandom, countLeft);
-  renderTotalClicks(buttonRandom.total.clickCount);
-
-  countLeft === 0 ?
-    $buttonRandom.disabled = true :
-    null;
-
-  if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
-    stopGame();
-  }
-};
-
-startGame();
+initGame();

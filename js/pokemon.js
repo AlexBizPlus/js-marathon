@@ -81,7 +81,6 @@ class Pokemon extends Selectors {
       const damages = await getDamages(hero.id, enemy.id, id);
       enemy.damageFighter(damages.kick.player2);
 
-
       const countLeft = buttonCount();
       renderButtonClicks($button, countLeft);
 

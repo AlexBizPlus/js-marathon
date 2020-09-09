@@ -55,8 +55,6 @@ class Pokemon extends Selectors {
     this.currentHealth -= damage;
 
     if (this.currentHealth < 0) {
-      hero.kills.kills.lastVictim = enemy.name;
-      hero.kills.kills.total++;
       this.currentHealth = 0;
     }
 
@@ -80,6 +78,7 @@ class Pokemon extends Selectors {
 
       const damages = await getDamages(hero.id, enemy.id, id);
       enemy.damageFighter(damages.kick.player2);
+      hero.damageFighter(damages.kick.player1);
 
       const countLeft = buttonCount();
       renderButtonClicks($button, countLeft);
@@ -87,7 +86,15 @@ class Pokemon extends Selectors {
       countLeft === 0 ?
         $button.disabled = true :
         null;
-      hero.damageFighter(damages.kick.player1);
+
+      if (enemy.currentHealth === 0) {
+        hero.kills.kills.lastVictim = enemy.name;
+        hero.kills.kills.total++;
+      }
+
+      hero.currentHealth === 0 ?
+        hero.kills.kills.lastVictim = '' :
+        null;
 
       if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
         stopGame();

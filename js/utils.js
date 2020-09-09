@@ -58,13 +58,13 @@ export const firstLetterToUpperCase = (name) => {
   }).join(' ');
 };
 
-export const getPlayerOne = (name, someArray) => {
-  return someArray.find(item => item.name === name)
-};
+// export const getPlayerOne = (name, someArray) => {
+//   return someArray.find(item => item.name === name)
+// };
 
-export const getPlayerTwo = (name, someArray) => {
-  return someArray.filter(item => item.name !== name)
-};
+// export const getPlayerTwo = (name, someArray) => {
+//   return someArray.filter(item => item.name !== name)
+// };
 
 export const showHeaderMessage = (text) => {
   const $textCaption = document.querySelector('#header-message');

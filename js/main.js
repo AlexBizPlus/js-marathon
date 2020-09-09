@@ -4,11 +4,8 @@ import {
   log
 } from "./const.js";
 import {
-  getRandomElement,
   showTimer,
-  getPlayerOne,
   showHeaderMessage,
-  getPlayerTwo,
   clearLog,
   resetColorProgressBar,
   resetButtonContainer
@@ -23,15 +20,17 @@ import {
 } from "./render.js";
 import Pokemon from "./pokemon.js";
 import {
-  getPokemons
+  // getPokemons,
+  getPokemonPlayer,
+  getRandomPokemonWithoutOne
 } from "./backend.js";
 
 let pokemons;
 export let hero;
 export let enemy;
 
-const reloadPlayerOne = () => {
-  const pikachu = getPlayerOne('Pikachu', pokemons);
+const reloadPlayerOne = async () => {
+  const pikachu = await getPokemonPlayer('Pikachu');
   renderPlayer('player1', pikachu);
   return new Pokemon({
     ...pikachu,
@@ -40,9 +39,8 @@ const reloadPlayerOne = () => {
   });
 };
 
-const getEnemy = () => {
-  const pokemonsWithoutPukachu = getPlayerTwo('Pikachu', pokemons);
-  const randomChar = getRandomElement(pokemonsWithoutPukachu);
+const getEnemy = async () => {
+  const randomChar = await getRandomPokemonWithoutOne(hero.id);
   renderPlayer('player2', randomChar);
   return new Pokemon({
     ...randomChar,
@@ -52,8 +50,7 @@ const getEnemy = () => {
 };
 
 
-const initGame = async () => {
-  pokemons = await getPokemons();
+const initGame = () => {
   renderContainer();
   renderHeaderMessage();
   renderStartButton();
@@ -61,14 +58,13 @@ const initGame = async () => {
 };
 
 export const startGame = () => {
-
   resetButtonContainer();
   showTimer();
   let lastTimeout;
   clearTimeout(lastTimeout);
-  lastTimeout = window.setTimeout(function () {
-    hero = reloadPlayerOne();
-    enemy = getEnemy();
+  lastTimeout = window.setTimeout(async () => {
+    hero = await reloadPlayerOne();
+    enemy = await getEnemy();
     hero.getButtons();
     clearLog();
     renderTotalKillS(hero.kills.kills.total, hero.kills.kills.lastVictim);

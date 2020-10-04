@@ -3,6 +3,7 @@ import {
   MAX_LOG_ELEMENTS,
   DELAY,
   log,
+  $container
 } from "./const.js";
 
 export const getRandomInteger = (a = 0, b = 1) => {
@@ -57,13 +58,13 @@ export const firstLetterToUpperCase = (name) => {
   }).join(' ');
 };
 
-export const getPlayerOne = (name, someArray) => {
-  return someArray.find(item => item.name === name)
-};
+// export const getPlayerOne = (name, someArray) => {
+//   return someArray.find(item => item.name === name)
+// };
 
-export const getPlayerTwo = (name, someArray) => {
-  return someArray.filter(item => item.name !== name)
-};
+// export const getPlayerTwo = (name, someArray) => {
+//   return someArray.filter(item => item.name !== name)
+// };
 
 export const showHeaderMessage = (text) => {
   const $textCaption = document.querySelector('#header-message');
@@ -89,4 +90,9 @@ export const resetColorProgressBar = () => {
       item.classList.remove('low') :
       null;
   });
-}
+};
+
+export const resetButtonContainer = () => {
+  const buttons = $container.querySelectorAll('button');
+  buttons.forEach(item => item.remove());
+};

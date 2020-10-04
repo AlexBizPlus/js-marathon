@@ -1,3 +1,4 @@
+/*
 export const pokemons = [
     {
         name: 'Pikachu',
@@ -192,3 +193,4 @@ export const pokemons = [
         ]
     }
 ];
+*/

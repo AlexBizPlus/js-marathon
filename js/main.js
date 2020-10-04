@@ -4,31 +4,34 @@ import {
   log
 } from "./const.js";
 import {
-  getRandomElement,
   showTimer,
-  getPlayerOne,
   showHeaderMessage,
-  getPlayerTwo,
   clearLog,
   resetColorProgressBar,
+  resetButtonContainer
 }
 from "./utils.js";
 import {
   renderContainer,
   renderHeaderMessage,
   renderStartButton,
-  renderPlayerTwo,
-  renderPlayerOne,
+  renderPlayer,
   renderTotalKillS
 } from "./render.js";
 import Pokemon from "./pokemon.js";
 import {
-  pokemons
-} from "./pokemons.js";
+  // getPokemons,
+  getPokemonPlayer,
+  getRandomPokemonWithoutOne
+} from "./backend.js";
 
-const reloadPlayerOne = () => {
-  const pikachu = getPlayerOne('Pikachu', pokemons);
-  renderPlayerOne(pikachu);
+let pokemons;
+export let hero;
+export let enemy;
+
+const reloadPlayerOne = async () => {
+  const pikachu = await getPokemonPlayer('Pikachu');
+  renderPlayer('player1', pikachu);
   return new Pokemon({
     ...pikachu,
     selector: 'player1',
@@ -36,10 +39,9 @@ const reloadPlayerOne = () => {
   });
 };
 
-const getEnemy = () => {
-  const pokemonsWithoutPukachu = getPlayerTwo('Pikachu', pokemons);
-  const randomChar = getRandomElement(pokemonsWithoutPukachu);
-  renderPlayerTwo(randomChar);
+const getEnemy = async () => {
+  const randomChar = await getRandomPokemonWithoutOne(hero.id);
+  renderPlayer('player2', randomChar);
   return new Pokemon({
     ...randomChar,
     selector: 'player2',
@@ -47,8 +49,6 @@ const getEnemy = () => {
   });
 };
 
-export let hero;
-export let enemy;
 
 const initGame = () => {
   renderContainer();
@@ -58,13 +58,13 @@ const initGame = () => {
 };
 
 export const startGame = () => {
-  $container.innerText = '';
+  resetButtonContainer();
   showTimer();
   let lastTimeout;
   clearTimeout(lastTimeout);
-  lastTimeout = window.setTimeout(function () {
-    hero = reloadPlayerOne();
-    enemy = getEnemy();
+  lastTimeout = window.setTimeout(async () => {
+    hero = await reloadPlayerOne();
+    enemy = await getEnemy();
     hero.getButtons();
     clearLog();
     renderTotalKillS(hero.kills.kills.total, hero.kills.kills.lastVictim);

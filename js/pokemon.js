@@ -1,5 +1,4 @@
 import {
-  getRandomInteger,
   firstLetterToUpperCase,
   decreaseClicks
 } from "./utils.js";
@@ -19,10 +18,14 @@ import {
   $container,
   log,
 } from "./const.js";
+import {
+  getDamages
+} from "./backend.js";
 class Selectors {
   constructor(name) {
     this.progressbar = document.getElementById(`progressbar-${name}`);
     this.state = document.getElementById(`health-${name}`);
+    this.img = document.getElementById(`img-${name}`);
   }
 };
 class Pokemon extends Selectors {
@@ -34,6 +37,7 @@ class Pokemon extends Selectors {
     this.type = props.type;
     this.attacks = props.attacks;
     this.kills = props.kills;
+    this.id = props.id;
   };
 
   renderHealthState() {
@@ -47,16 +51,10 @@ class Pokemon extends Selectors {
       null;
   };
 
-  damageFighter(minDamage = 0, maxDamage = 0) {
-    const damage = this === enemy ?
-      getRandomInteger(minDamage, maxDamage) :
-      getRandomInteger(enemy.attacks[0].minDamage, enemy.attacks[0].maxDamage);
-
+  damageFighter(damage) {
     this.currentHealth -= damage;
 
     if (this.currentHealth < 0) {
-      hero.kills.kills.lastVictim = enemy.name;
-      hero.kills.kills.total++;
       this.currentHealth = 0;
     }
 
@@ -69,22 +67,34 @@ class Pokemon extends Selectors {
     this.renderHealthState();
   };
 
-  renderButton(name, maxCount, minDamage, maxDamage) {
+  renderButton(name, maxCount, id) {
     $container.style.alignContent = '';
     const $button = document.createElement('button');
     $button.classList.add('button');
     $button.innerText = `${firstLetterToUpperCase(name)} []`;
     renderButtonClicks($button, maxCount);
     const buttonCount = decreaseClicks(maxCount);
-    $button.addEventListener('click', () => {
-      enemy.damageFighter(minDamage, maxDamage);
+    $button.addEventListener('click', async () => {
+
+      const damages = await getDamages(hero.id, enemy.id, id);
+      enemy.damageFighter(damages.kick.player2);
+      hero.damageFighter(damages.kick.player1);
+
       const countLeft = buttonCount();
       renderButtonClicks($button, countLeft);
 
       countLeft === 0 ?
         $button.disabled = true :
         null;
-      hero.damageFighter();
+
+      if (enemy.currentHealth === 0) {
+        hero.kills.kills.lastVictim = enemy.name;
+        hero.kills.kills.total++;
+      }
+
+      hero.currentHealth === 0 ?
+        hero.kills.kills.lastVictim = '' :
+        null;
 
       if (hero.currentHealth === 0 || enemy.currentHealth === 0) {
         stopGame();
@@ -97,7 +107,7 @@ class Pokemon extends Selectors {
   getButtons() {
     $container.innerText = '';
     this.attacks.forEach(element => {
-      this.renderButton(element.name, element.maxCount, element.minDamage, element.maxDamage);
+      this.renderButton(element.name, element.maxCount, element.id);
     });
   };
 };
